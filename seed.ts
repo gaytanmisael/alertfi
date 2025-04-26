@@ -6,7 +6,7 @@ import { User } from "@/server/db/schema";
 import { hash } from "@node-rs/argon2";
 
 import * as dotenv from "dotenv";
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
 dotenv.config({ path: "./.env" });
 
 const globalForDb = globalThis as unknown as {

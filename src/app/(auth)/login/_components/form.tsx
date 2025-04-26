@@ -5,9 +5,7 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { api } from "@/trpc/react";
-
-import { loginSchema, type Login } from "@/models/Auth";
+import { loginSchema, type LoginSchema } from "@/models/Auth";
 
 import {
   Form,
@@ -21,10 +19,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-import { getErrorMessage } from "utils/errorUtil";
+import { loginAction } from "../action";
 
 export function LoginForm() {
-  const form = useForm<Login>({
+  const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -32,27 +30,12 @@ export function LoginForm() {
     },
   });
 
-  const utils = api.useUtils();
-  const login = api.auth.login.useMutation({
-    onSuccess: async () => {
-      await utils.auth.invalidate();
-      toast.success("You're now logged in!");
-      // Optional: redirect to dashboard
-      window.location.href = "/dashboard";
-    },
-    onError: (error) => {
-      toast.error("Oops... something went wrong", {
-        description: error.message,
-      });
-    },
-  });
+  async function onSubmit(values: LoginSchema) {
+    const result = await loginAction({ message: "" }, values);
 
-  async function onSubmit(values: Login) {
-    try {
-      await login.mutateAsync(values);
-    } catch (e: unknown) {
+    if (result?.message) {
       toast.error("Oopps... something went wrong", {
-        description: getErrorMessage(e),
+        description: result?.message,
       });
     }
   }

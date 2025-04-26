@@ -4,7 +4,6 @@ import { globalGETRateLimit } from "@/server/auth/request";
 import { getCurrentSession } from "@/server/auth/session";
 import { redirect } from "next/navigation";
 
-import { LatestPost } from "@/app/_components/post";
 import { api, HydrateClient } from "@/trpc/server";
 
 export default async function Home() {
@@ -53,8 +52,6 @@ export default async function Home() {
           <div className="flex flex-col items-center gap-2">
             <p className="text-2xl text-white">Hello</p>
           </div>
-
-          <LatestPost />
         </div>
       </main>
     </HydrateClient>

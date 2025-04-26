@@ -1,7 +1,5 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
-import { getCurrentSession } from "@/server/auth/session";
 import { globalGETRateLimit } from "@/server/auth/request";
 
 import {
@@ -11,37 +9,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { RegisterForm } from "./_components/form";
+import { ForgotEmailForm } from "./_components/form";
 
 export default async function Page() {
-  if (!(await globalGETRateLimit())) {
-    return "Too many requests.";
-  }
-
-  const { session, user } = await getCurrentSession();
-  if (session !== null) {
-    if (!user.emailVerified) {
-      return redirect("/verify-email");
-    }
-    if (!user.registered2FA) {
-      return redirect("/2fa/setup");
-    }
-    if (!session.twoFactorVerified) {
-      return redirect("/2fa");
-    }
-    return redirect("/");
-  }
+  if (!(await globalGETRateLimit())) return "Too many requests";
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-2xl">Sign Up</CardTitle>
+        <CardTitle className="text-2xl">Forgot Password</CardTitle>
         <CardDescription>
-          Enter your email below to create an account.
+          Enter your email below to begin process.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <RegisterForm />
+        <ForgotEmailForm />
         <div className="text-center text-sm">
           Already have an account?{" "}
           <Link
